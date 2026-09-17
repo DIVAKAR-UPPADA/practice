@@ -1,0 +1,32 @@
+---
+- name: Deploy FoodFlow from GitHub
+  hosts: foodflow
+  become: true
+  vars:
+    app_root: /opt/foodflow
+    project_repo: https://github.com/ravitejacmr/online-food-delivery.git
+    project_version: main
+  tasks:
+    - name: Install Docker and Git
+      ansible.builtin.apt:
+        name: [docker.io, docker-compose-v2, git]
+        state: present
+        update_cache: true
+
+    - name: Enable Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Check out FoodFlow from GitHub
+      ansible.builtin.git:
+        repo: "{{ project_repo }}"
+        dest: "{{ app_root }}"
+        version: "{{ project_version }}"
+        force: true
+
+    - name: Build and start FoodFlow containers
+      ansible.builtin.command:
+        cmd: docker compose -f {{ app_root }}/docker-compose.yml up --build --detach
+      changed_when: true
