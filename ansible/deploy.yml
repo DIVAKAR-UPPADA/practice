@@ -4,7 +4,7 @@
   become: true
   vars:
     app_root: /opt/foodflow
-    project_repo: https://github.com/ravitejacmr/online-food-delivery.git
+    project_repo: https://github.com/DIVAKAR-UPPADA/practice.git
     project_version: main
   tasks:
     - name: Install Docker and Git
